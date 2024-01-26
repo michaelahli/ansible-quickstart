@@ -1,0 +1,9 @@
+- name: learn ansible
+  hosts: idcloudhost
+  tasks:
+    - name: Ping server
+      ansible.builtin.ping:
+
+    - name: Hello World
+      ansible.builtin.debug:
+        msg: Hello World

@@ -1,0 +1,5 @@
+- name: Ping idcloudhost
+  hosts: idcloudhost
+  tasks:
+    - name: Ping the host
+      ping:
