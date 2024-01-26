@@ -98,3 +98,14 @@ you can see flag -b or --become added in following command, this because apt req
 ```
 ansible-playbook -i inventory.ini playbooks/postgresql/install.yaml -u user --ask-pass -b
 ```
+
+2. create test database using `postgresql/database.yaml` playbook
+```
+ansible-playbook -i inventory.ini playbooks/postgresql/database.yaml -u user --ask-pass
+```
+
+3. create test table using `postgresql/table.yaml` playbook
+```
+ansible-playbook -i inventory.ini playbooks/postgresql/table.yaml -u user --ask-pass
+```
+

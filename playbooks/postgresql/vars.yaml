@@ -1,0 +1,3 @@
+db_name: testdb
+db_user: testdb_user
+db_password: supersecret
