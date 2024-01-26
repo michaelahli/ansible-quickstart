@@ -72,7 +72,7 @@ you need to change directory to ansible's working directory:
 cd ansible
 ```
 
-and then you can proceed to paste host ip to inventory.ini
+and then you can proceed to create file `inventory.ini`
 
 ```
 [idcloudhost]
