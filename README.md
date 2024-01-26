@@ -67,12 +67,7 @@ terraform -chdir=terraform/ destroy --auto-approve
 
 ### Preparation
 
-you need to change directory to ansible's working directory:
-```
-cd ansible
-```
-
-and then you can proceed to create file `inventory.ini`
+create file `inventory.ini` at the root directory
 
 ```
 [idcloudhost]
@@ -94,14 +89,12 @@ ansible idcloudhost -m ping -i inventory.ini -u user --ask-pass
 ### Hello World
 using hello world playbook you can test ansible automation
 ```
-ansible-playbook -i inventory.ini helloworld/helloworld.yaml -u user --ask-pass
+ansible-playbook -i inventory.ini playbooks/helloworld/helloworld.yaml -u user --ask-pass
 ```
 
 ### PostgreSQL Database Management
 1. install postgresql using `postgresql/install.yaml` playbook
 you can see flag -b or --become added in following command, this because apt requiring sudo to install packages
 ```
-ansible-playbook -i inventory.ini postgresql/install.yaml -u user --ask-pass -b
+ansible-playbook -i inventory.ini playbooks/postgresql/install.yaml -u user --ask-pass -b
 ```
-
-
