@@ -1,4 +1,0 @@
-servers:
-  hosts:
-    idcloudhost:
-      ansible_hosts: 27.112.78.141
