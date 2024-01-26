@@ -1,0 +1,19 @@
+- name: install postgresql
+  hosts: idcloudhost
+  tasks:
+    - name: Install dependencies
+      apt: name={{ item }} update_cache=true state=latest
+      with_items:
+        - bash
+        - ssh
+        - libssl-dev
+        - libssl-doc
+    - name: Install PostgreSQL
+      apt: name={{ item }} update_cache=true state=latest
+      with_items:
+        - postgresql
+        - postgresql-contrib
+        - libpq-dev
+        - python3-psycopg2
+    - name: Check PostgrSQL Status
+      service: name=postgresql state=started enabled=yes 
