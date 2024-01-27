@@ -1,20 +1,32 @@
-- name: install postgresql
+- name: Install dependencies
   hosts: idcloudhost
   tasks:
-    - name: Install dependencies
-      apt: name={{ item }} update_cache=true state=latest
-      with_items:
+    - name: Install required dependencies
+      apt:
+        name: "{{ item }}"
+        update_cache: true
+        state: latest
+      loop:
         - bash
         - ssh
         - libssl-dev
         - libssl-doc
         - acl
-    - name: Install PostgreSQL
-      apt: name={{ item }} update_cache=true state=latest
-      with_items:
+      become: true
+    - name: Install PostgreSQL and related packages
+      apt:
+        name: "{{ item }}"
+        update_cache: true
+        state: latest
+      loop:
         - postgresql
         - postgresql-contrib
         - libpq-dev
         - python3-psycopg2
-    - name: Check PostgrSQL Status
-      service: name=postgresql state=started enabled=yes 
+      become: true
+    - name: Ensure PostgreSQL service is started and enabled
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+      become: true

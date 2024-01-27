@@ -94,9 +94,8 @@ ansible-playbook -i inventory.ini playbooks/helloworld/helloworld.yaml -u user -
 
 ### PostgreSQL Database Management
 1. install postgresql using `postgresql/install.yaml` playbook
-you can see flag -b or --become added in following command, this because apt requiring sudo to install packages
 ```
-ansible-playbook -i inventory.ini playbooks/postgresql/install.yaml -u user --ask-pass -b
+ansible-playbook -i inventory.ini playbooks/postgresql/install.yaml -u user --ask-pass
 ```
 
 2. create test database using `postgresql/database.yaml` playbook
