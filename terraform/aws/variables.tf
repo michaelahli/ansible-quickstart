@@ -3,6 +3,7 @@ variable "credentials" {
     region     = string
     access_key = string
     secret_key = string
+    public_key = string
   })
 }
 

@@ -27,6 +27,11 @@ resource "aws_security_group_rule" "ssh_ingress" {
   cidr_blocks       = ["0.0.0.0/0"] 
 }
 
+resource "aws_key_pair" "ansible_key" {
+  key_name   = "ansible_key"
+  public_key = var.credentials.public_key 
+}
+
 resource "aws_instance" "ansible" {
   ami = var.ansible.ami
   instance_type = "t3.micro"
@@ -34,6 +39,7 @@ resource "aws_instance" "ansible" {
     Name = "ansible"
   }
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+  key_name = aws_key_pair.ansible_key.key_name
 }
 
 output "public_ip" {
