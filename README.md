@@ -62,28 +62,28 @@ ansible-inventory -i hosts --list
 ### Ping Host Server
 you need to check if ansible has been connected to your server using:
 ```
-ansible idcloudhost -m ping -i hosts --ask-pass
+ansible idcloudhost -m ping -i hosts
 ```
 
 ### Hello World
 using hello world playbook you can test ansible automation
 ```
-ansible-playbook -i hosts playbooks/helloworld/helloworld.yaml --ask-pass
+ansible-playbook -i hosts playbooks/helloworld/helloworld.yaml
 ```
 
 ### PostgreSQL Database Management
 1. install postgresql using `postgresql/install.yaml` playbook
 ```
-ansible-playbook -i hosts playbooks/postgresql/install.yaml --ask-pass
+ansible-playbook -i hosts playbooks/postgresql/install.yaml
 ```
 
 2. create test database using `postgresql/database.yaml` playbook
 ```
-ansible-playbook -i hosts playbooks/postgresql/database.yaml --ask-pass
+ansible-playbook -i hosts playbooks/postgresql/database.yaml
 ```
 
 3. create test table using `postgresql/table.yaml` playbook
 ```
-ansible-playbook -i hosts playbooks/postgresql/table.yaml --ask-pass
+ansible-playbook -i hosts playbooks/postgresql/table.yaml
 ```
 
