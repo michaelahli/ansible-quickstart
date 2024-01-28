@@ -13,18 +13,36 @@ provider "aws" {
   secret_key = var.credentials.secret_key
 }
 
-resource "aws_security_group" "allow_ssh" {
-  name        = "allow_ssh"
+resource "aws_security_group" "ansible_security" {
+  name        = "ansible_security"
   description = "Allow inbound SSH traffic"
 }
 
 resource "aws_security_group_rule" "ssh_ingress" {
-  security_group_id = aws_security_group.allow_ssh.id
+  security_group_id = aws_security_group.ansible_security.id
   type              = "ingress"
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"] 
+}
+
+resource "aws_security_group_rule" "outgoing_http" {
+  security_group_id = aws_security_group.ansible_security.id
+  type              = "egress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "outgoing_https" {
+  security_group_id = aws_security_group.ansible_security.id
+  type              = "egress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_key_pair" "ansible_key" {
@@ -38,7 +56,7 @@ resource "aws_instance" "ansible" {
   tags = {
     Name = "ansible"
   }
-  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+  vpc_security_group_ids = [aws_security_group.ansible_security.id]
   key_name = aws_key_pair.ansible_key.key_name
 }
 
