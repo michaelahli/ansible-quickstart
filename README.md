@@ -67,44 +67,43 @@ terraform -chdir=terraform/ destroy --auto-approve
 
 ### Preparation
 
-create file `inventory.ini` at the root directory
+create file `hosts` at the root directory
 
 ```
-[idcloudhost]
-00.000.00.000
+cp hosts.example hosts
 ```
 
 ### Check Inventory
 you need to check if inventory has been setted up correctly using :
 ```
-ansible-inventory -i inventory.ini --list
+ansible-inventory -i hosts --list
 ```
 
 ### Ping Host Server
 you need to check if ansible has been connected to your server using:
 ```
-ansible idcloudhost -m ping -i inventory.ini -u user --ask-pass
+ansible idcloudhost -m ping -i hosts --ask-pass
 ```
 
 ### Hello World
 using hello world playbook you can test ansible automation
 ```
-ansible-playbook -i inventory.ini playbooks/helloworld/helloworld.yaml -u user --ask-pass
+ansible-playbook -i hosts playbooks/helloworld/helloworld.yaml --ask-pass
 ```
 
 ### PostgreSQL Database Management
 1. install postgresql using `postgresql/install.yaml` playbook
 ```
-ansible-playbook -i inventory.ini playbooks/postgresql/install.yaml -u user --ask-pass
+ansible-playbook -i hosts playbooks/postgresql/install.yaml --ask-pass
 ```
 
 2. create test database using `postgresql/database.yaml` playbook
 ```
-ansible-playbook -i inventory.ini playbooks/postgresql/database.yaml -u user --ask-pass
+ansible-playbook -i hosts playbooks/postgresql/database.yaml --ask-pass
 ```
 
 3. create test table using `postgresql/table.yaml` playbook
 ```
-ansible-playbook -i inventory.ini playbooks/postgresql/table.yaml -u user --ask-pass
+ansible-playbook -i hosts playbooks/postgresql/table.yaml --ask-pass
 ```
 
