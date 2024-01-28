@@ -13,12 +13,27 @@ provider "aws" {
   secret_key = var.credentials.secret_key
 }
 
+resource "aws_security_group" "allow_ssh" {
+  name        = "allow_ssh"
+  description = "Allow inbound SSH traffic"
+}
+
+resource "aws_security_group_rule" "ssh_ingress" {
+  security_group_id = aws_security_group.allow_ssh.id
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"] 
+}
+
 resource "aws_instance" "ansible" {
   ami = var.ansible.ami
   instance_type = "t3.micro"
   tags = {
-    Name = "ansbible"
+    Name = "ansible"
   }
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
 }
 
 output "public_ip" {
