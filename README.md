@@ -47,10 +47,11 @@ terraform -chdir=terraform/:provider/ destroy --auto-approve
 
 ### Preparation
 
-create file `hosts` at the root directory with your instance's public ip.
-
+configure hosts and variables with real instance ip
 ```
 cp hosts.example hosts
+cp group_vars/aws.yaml.example group_vars/aws.yaml
+cp group_vars/idcloudhost.yaml.example group_vars/idcloudhost.yaml
 ```
 
 ### Check Inventory
