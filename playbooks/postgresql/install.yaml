@@ -1,5 +1,5 @@
 - name: Install dependencies
-  hosts: idcloudhost
+  hosts: all 
   tasks:
     - name: Install required dependencies
       apt:

@@ -1,5 +1,5 @@
 - name: create database
-  hosts: idcloudhost
+  hosts: all 
   vars_files:
     - vars.yaml 
   tasks:
