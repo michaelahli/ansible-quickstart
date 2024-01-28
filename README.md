@@ -13,7 +13,7 @@ pip install ansible
 We use terraform to automate managing our server, you can do it manually or use any preferred provisioning tools or API.
 
 ### Variables
-you need to create file terraform.tfvars in `terraform/terraform.tfvars` as following example:
+you need to create file terraform.tfvars in `terraform/:provider/terraform.tfvars` as following example:
 ```
 credentials = {
   auth_token = "supersecret"
@@ -29,45 +29,25 @@ ansible_vm = {
 ### Instance Creation
 In order to create the instance:
 ```
-terraform -chdir=terraform/ init
-terraform -chdir=terraform/ plan
-terraform -chdir=terraform/ apply --auto-approve
+terraform -chdir=terraform/:provider/ init
+terraform -chdir=terraform/:provider/ plan
+terraform -chdir=terraform/:provider/ apply --auto-approve
 ```
 
 ### Host IP
-created instance's public ip can be seen on file terraform state at `terraform/terraform.tfstate`:
-```
-{
-    ...
-    resources: [
-        {
-            "name": "ansible_ip",
-            "instances": [
-               {
-                    "attributes": {
-                        "address": "00.000.00.000",
-                        ....
-                    }
-               } 
-            ],
-            ...
-        },
-        {...}
-    ]
-}
-```
+created instance's public ip can be seen as an execution output. 
 
 ### Instance Removal
 In order to delete the instance after usage
 ```
-terraform -chdir=terraform/ destroy --auto-approve
+terraform -chdir=terraform/:provider/ destroy --auto-approve
 ```
 
 ## Working with ansible
 
 ### Preparation
 
-create file `hosts` at the root directory
+create file `hosts` at the root directory with your instance's public ip.
 
 ```
 cp hosts.example hosts
