@@ -21,14 +21,15 @@
         update-alternatives --set java_sdk_man /usr/lib/jvm/java-11-openjdk-amd64/man
         update-alternatives --set java_sdk_doc /usr/lib/jvm/java-11-openjdk-amd64/jre/man
 
-    - name: Download WSO2 API Manager
-      get_url:
-        url: https://dl.wso2.com/api-manager/4.1.0/wso2am-4.1.0.zip
-        dest: /tmp/wso2am-4.1.0.zip
+    - name: Copy WSO2 API Manager from local file
+      copy:
+        src: ~/Downloads/wso2am-4.2.0.zip
+        dest: /tmp/wso2am-4.2.0.zip
+        remote_src: yes
 
     - name: Unzip WSO2 API Manager
       unarchive:
-        src: /tmp/wso2am-4.1.0.zip
+        src: /tmp/wso2am-4.2.0.zip
         dest: /opt
         remote_src: yes
 
@@ -37,8 +38,8 @@
         - name: Create WSO2 API Manager directories
           file:
             path:
-              - /opt/wso2am-4.1.0/repository/deployment/server
-              - /opt/wso2am-4.1.0/repository/logs
+              - /opt/wso2am-4.2.0/repository/deployment/server
+              - /opt/wso2am-4.2.0/repository/logs
             state: directory
             owner: wso2user
             group: wso2user
@@ -64,11 +65,9 @@
                 type: simple
                 user: wso2user
                 group: wso2user
-                exec_start: /opt/wso2am-4.1.0/bin/wso2server.sh start
-                exec_stop: /opt/wso2am-4.1.0/bin/wso2server.sh stop
-                pid_file: /opt/wso2am-4.1.0/repository/logs/wso2carbon.pid
-                environment_file: /opt/wso2am-4.1.0/bin/wso2server.sh
+                exec_start: /opt/wso2am-4.2.0/bin/wso2server.sh start
+                exec_stop: /opt/wso2am-4.2.0/bin/wso2server.sh stop
+                pid_file: /opt/wso2am-4.2.0/repository/logs/wso2carbon.pid
+                environment_file: /opt/wso2am-4.2.0/bin/wso2server.sh
                 environment:
-                  - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-                  - CARBON_HOME=/opt/wso2am-4.1.0
-                  - JAVA_OPTS=-Xms256m -Xmx1024m
+                  - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd
