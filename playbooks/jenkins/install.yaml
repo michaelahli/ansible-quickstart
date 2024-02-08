@@ -1,0 +1,56 @@
+- name: Install Jenkins
+  hosts: all
+  become: yes
+  vars:
+    jenkins_version: 2.303.3-1
+    jenkins_user: jenkins
+    jenkins_group: jenkins
+    jenkins_home: /var/lib/jenkins
+  tasks:
+    - name: Add Jenkins APT repository key
+      apt_key:
+        url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+        state: present
+
+    - name: Add Jenkins APT repository
+      apt_repository:
+        repo: deb https://pkg.jenkins.io/debian-stable binary/
+        state: present
+        filename: jenkins
+
+    - name: Update APT package cache
+      apt:
+        update_cache: yes
+
+    - name: Install Java OpenJDK 11
+      apt:
+        name: openjdk-11-jdk
+        state: present
+
+    - name: Install Jenkins
+      apt:
+        name: jenkins={{ jenkins_version }}
+        state: present
+
+    - name: Create Jenkins user and group
+      user:
+        name: "{{ jenkins_user }}"
+        group: "{{ jenkins_group }}"
+        createhome: yes
+
+    - name: Set Jenkins home directory
+      file:
+        path: "{{ jenkins_home }}"
+        owner: "{{ jenkins_user }}"
+        group: "{{ jenkins_group }}"
+        mode: 0755
+
+    - name: Set Jenkins service to start on boot
+      systemd:
+        name: jenkins
+        enabled: yes
+
+    - name: Start Jenkins service
+      systemd:
+        name: jenkins
+        state: started
