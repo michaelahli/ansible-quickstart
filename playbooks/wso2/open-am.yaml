@@ -1,0 +1,42 @@
+- name: Set up WSO2 API Manager environment
+  hosts: all
+  tasks:
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        update_cache: true
+        state: latest
+      loop:
+        - openjdk-11-jdk 
+        - maven 
+        - ant
+      become: yes
+
+    - name: Set JAVA_HOME environment variable
+      lineinfile:
+        dest: /etc/environment
+        line: 'JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64'
+        state: present
+      become: yes
+
+    - name: Ensure /opt/wso2 directory exists
+      ansible.builtin.file:
+        path: /opt/wso2
+        state: directory
+        mode: '0755'
+      become: yes
+
+    - name: Download and extract WSO2
+      ansible.builtin.get_url:
+        url: 'https://github.com/wso2/product-apim/archive/refs/tags/v4.2.0.tar.gz'
+        dest: '/opt/wso2'
+        mode: '0755'
+      become: yes
+
+    - name: Extract WSO2 tarball
+      ansible.builtin.unarchive:
+        src: '/opt/wso2/product-apim-4.2.0.tar.gz'
+        dest: '/opt/wso2'
+        remote_src: yes
+      become: yes 
+
