@@ -7,7 +7,7 @@
         update_cache: true
         state: latest
       loop:
-        - openjdk-11-jdk 
+        - openjdk-17-jdk 
         - maven 
         - ant
       become: yes
@@ -15,7 +15,7 @@
     - name: Set JAVA_HOME environment variable
       lineinfile:
         dest: /etc/environment
-        line: 'JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64'
+        line: 'JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64'
         state: present
       become: yes
 
