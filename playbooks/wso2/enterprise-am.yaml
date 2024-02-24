@@ -1,5 +1,9 @@
 - name: Set up WSO2 API Manager environment
   hosts: all
+  vars:
+    binary_dir: "~/Downloads/wso2am-4.2.0.zip"
+    ip_address: 192.168.1.10
+
   tasks:
     - name: Install required packages
       apt:
@@ -35,7 +39,7 @@
 
     - name: Copy WSO2 from local machine
       ansible.builtin.copy:
-        src: "~/Downloads/wso2am-4.2.0.zip"
+        src: "{{ binary_dir }}"
         dest: "/opt/wso2/wso2am-4.2.0.zip"
         mode: '0755'
       when: wso2_file_stat.stat.exists == false
@@ -46,4 +50,11 @@
         src: "/opt/wso2/wso2am-4.2.0.zip"
         dest: "/opt/wso2"
         remote_src: yes
+      become: yes
+
+    - name: Replace localhost with target host's IP address in deployment.toml
+      replace:
+        path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
+        regexp: 'localhost'
+        replace: "{{ ip_address }}"
       become: yes
