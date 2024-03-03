@@ -1,0 +1,79 @@
+- name: Set up WSO2 API Manager environment
+  hosts: all
+  vars:
+    binary_path: "../../../bin/zip/wso2am-4.2.0.zip"
+    conf_path: "../../../conf/wso2am.service.j2"
+    ip_address: 192.168.1.10
+
+  tasks:
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        update_cache: true
+        state: latest
+      loop:
+        - openjdk-17-jdk 
+        - maven 
+        - ant
+        - unzip 
+      become: yes
+
+    - name: Set JAVA_HOME environment variable
+      lineinfile:
+        dest: /etc/environment
+        line: 'JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64'
+        state: present
+      become: yes
+
+    - name: Ensure /opt/wso2 directory exists
+      ansible.builtin.file:
+        path: /opt/wso2
+        state: directory
+        mode: '0755'
+      become: yes
+
+    - name: Check if WSO2 file already exists
+      ansible.builtin.stat:
+        path: "/opt/wso2/wso2am-4.2.0.zip"
+      register: wso2_file_stat
+      become: yes
+
+    - name: Copy WSO2 from local machine
+      ansible.builtin.copy:
+        src: "{{ binary_path }}"
+        dest: "/opt/wso2/wso2am-4.2.0.zip"
+        mode: '0755'
+      when: wso2_file_stat.stat.exists == false
+      become: yes
+
+    - name: Extract WSO2 zip file
+      ansible.builtin.unarchive:
+        src: "/opt/wso2/wso2am-4.2.0.zip"
+        dest: "/opt/wso2"
+        remote_src: yes
+      become: yes
+
+    - name: Replace localhost with target host's IP address in deployment.toml
+      replace:
+        path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
+        regexp: 'localhost'
+        replace: "{{ ip_address }}"
+      become: yes
+
+    - name: Create systemd service file for WSO2 API Manager
+      template:
+        src: "{{ conf_path }}"
+        dest: /etc/systemd/system/wso2am.service
+      become: yes
+
+    - name: Reload systemd after creating service file
+      systemd:
+        daemon_reload: yes
+      become: yes
+
+    - name: Start and enable WSO2 API Manager service
+      systemd:
+        name: wso2am
+        state: started
+        enabled: yes
+      become: yes

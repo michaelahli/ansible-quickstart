@@ -1,0 +1,13 @@
+[Unit]
+Description=WSO2 Micro Integrator
+After=network.target
+
+[Service]
+Environment=JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 
+ExecStart=/usr/bin/bash /opt/wso2/wso2mi-4.2.0/bin/micro-integrator.sh
+ExecStop=/usr/bin/bash /opt/wso2/wso2mi-4.2.0/bin/micro-integrator.sh stop
+ExecReload=/usr/bin/bash /opt/wso2/wso2mi-4.2.0/bin/micro-integrator.sh restart
+PIDFile=/opt/wso2/wso2mi-4.2.0/wso2carbon.pid
+
+[Install]
+WantedBy=default.target
