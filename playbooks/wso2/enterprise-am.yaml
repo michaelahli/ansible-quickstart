@@ -1,7 +1,7 @@
 - name: Set up WSO2 API Manager environment
   hosts: all
   vars:
-    binary_dir: "~/Downloads/wso2am-4.2.0.zip"
+    binary_dir: "./bin/wso2am-4.2.0.zip"
     ip_address: 192.168.1.10
 
   tasks:
@@ -57,4 +57,22 @@
         path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
         regexp: 'localhost'
         replace: "{{ ip_address }}"
+      become: yes
+
+    - name: Create systemd service file for WSO2 API Manager
+      template:
+        src: conf/wso2am.service.j2  
+        dest: /etc/systemd/system/wso2am.service
+      become: yes
+
+    - name: Reload systemd after creating service file
+      systemd:
+        daemon_reload: yes
+      become: yes
+
+    - name: Start and enable WSO2 API Manager service
+      systemd:
+        name: wso2am
+        state: started
+        enabled: yes
       become: yes
