@@ -1,8 +1,9 @@
 - name: Set up WSO2 API Manager environment
   hosts: all
   vars:
-    binary_dir: "./bin/wso2am-4.2.0.zip"
-    ip_address: 192.168.1.10
+    binary_path: "./../../bin/wso2am-4.2.0.zip"
+    conf_path: "./../../conf/wso2am.service.j2"
+    ip_address: 47.128.149.67
 
   tasks:
     - name: Install required packages
@@ -39,7 +40,7 @@
 
     - name: Copy WSO2 from local machine
       ansible.builtin.copy:
-        src: "{{ binary_dir }}"
+        src: "{{ binary_path }}"
         dest: "/opt/wso2/wso2am-4.2.0.zip"
         mode: '0755'
       when: wso2_file_stat.stat.exists == false
@@ -61,7 +62,7 @@
 
     - name: Create systemd service file for WSO2 API Manager
       template:
-        src: conf/wso2am.service.j2  
+        src: "{{ conf_path }}"
         dest: /etc/systemd/system/wso2am.service
       become: yes
 

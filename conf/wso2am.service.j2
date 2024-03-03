@@ -3,9 +3,10 @@ Description=WSO2 API Manager
 After=network.target
 
 [Service]
-ExecStart=/opt/wso2/wso2am-4.2.0/bin/api-manager.sh
-ExecStop=/opt/wso2/wso2am-4.2.0/bin/api-manager.sh stop
-ExecReload=/opt/wso2/wso2am-4.2.0/bin/api-manager.sh restart
+Environment=JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 
+ExecStart=/usr/bin/bash /opt/wso2/wso2am-4.2.0/bin/api-manager.sh
+ExecStop=/usr/bin/bash /opt/wso2/wso2am-4.2.0/bin/api-manager.sh stop
+ExecReload=/usr/bin/bash /opt/wso2/wso2am-4.2.0/bin/api-manager.sh restart
 PIDFile=/opt/wso2/wso2am-4.2.0/wso2carbon.pid
 
 [Install]
