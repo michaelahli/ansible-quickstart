@@ -50,6 +50,18 @@
         remote_src: yes
       become: yes
 
+    - name: Render deployment.toml template
+      ansible.builtin.copy:
+        src: "{{ deployment_conf_path }}"
+        dest: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
+      become: yes
+
+    - name: Copy postgresql jar
+      ansible.builtin.copy:
+        src: "{{ postgresql_jar_path }}"
+        dest: "/opt/wso2/wso2am-4.2.0/repository/components/lib/postgresql-42.7.2.jar"
+      become: yes
+
     - name: Replace localhost with target host's IP address in deployment.toml
       replace:
         path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
@@ -61,4 +73,9 @@
       template:
         src: "{{ conf_path }}"
         dest: /etc/systemd/system/wso2am.service
+      become: yes
+
+    - name: Reload systemd 
+      systemd:
+        daemon_reload: yes
       become: yes

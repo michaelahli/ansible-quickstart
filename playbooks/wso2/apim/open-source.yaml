@@ -56,3 +56,8 @@
         src: "{{ conf_path }}"
         dest: /etc/systemd/system/wso2am.service
       become: yes
+
+    - name: Reload systemd 
+      systemd:
+        daemon_reload: yes
+      become: yes
