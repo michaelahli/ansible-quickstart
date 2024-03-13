@@ -1,0 +1,3 @@
+binary_path: "../../../bin/zip/wso2am-4.2.0.zip"
+conf_path: "../../../conf/wso2gw.service.j2"
+ip_address: 192.168.1.10

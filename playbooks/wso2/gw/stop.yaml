@@ -1,0 +1,9 @@
+- name: Set up WSO2 API Manager environment
+  hosts: all
+  tasks:
+    - name: Stop and disable WSO2 API Manager service
+      systemd:
+        name: wso2gw
+        state: stopped
+        enabled: yes
+      become: yes

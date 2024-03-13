@@ -1,0 +1,4 @@
+binary_path: "../../../bin/zip/wso2mi-4.2.0.zip"
+conf_path: "../../../conf/wso2mi.service.j2"
+car_path: "../../../bin/car"
+ip_address: 192.168.1.10

@@ -3,3 +3,5 @@ hosts
 *.zip
 .vscode
 .DS_Store
+
+vars.yaml

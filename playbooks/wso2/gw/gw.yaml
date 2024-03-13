@@ -1,9 +1,7 @@
 - name: Set up WSO2 Gateway Worker environment
   hosts: all
-  vars:
-    binary_path: "../../../bin/zip/wso2am-4.2.0.zip"
-    conf_path: "../../../conf/wso2gw.service.j2"
-    ip_address: 192.168.1.10
+  vars_files:
+    - vars.yaml 
 
   tasks:
     - name: Install required packages
@@ -91,11 +89,4 @@
     - name: Reload systemd after creating service file
       systemd:
         daemon_reload: yes
-      become: yes
-
-    - name: Start and enable WSO2 Gateway Worker service
-      systemd:
-        name: wso2gw
-        state: started
-        enabled: yes
       become: yes

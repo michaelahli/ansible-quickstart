@@ -2,7 +2,7 @@ binary_path: "../../../bin/zip/wso2am-4.2.0.zip"
 postgresql_jar_path: "../../../bin/jar/postgresql-42.7.2.jar"
 conf_path: "../../../conf/wso2am.service.j2"
 deployment_conf_path: "../../../conf/deployment.apim.toml"
-ip_address: 122.248.216.98
+ip_address: 192.168.1.10
 postgres_version: 14
 apim_db_name: apim_db
 apim_db_user: apim_db_user

@@ -1,0 +1,9 @@
+- name: Set up WSO2 Micro Integrator environment
+  hosts: all
+  tasks:
+    - name: Start and enable WSO2 Micro Integrator service
+      systemd:
+        name: wso2mi
+        state: started
+        enabled: yes
+      become: yes

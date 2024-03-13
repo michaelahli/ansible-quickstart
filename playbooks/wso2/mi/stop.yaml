@@ -1,0 +1,9 @@
+- name: Set up WSO2 Micro Integrator environment
+  hosts: all
+  tasks:
+    - name: Stop and disable WSO2 Micro Integrator service
+      systemd:
+        name: wso2mi
+        state: stopped
+        enabled: yes
+      become: yes
