@@ -80,7 +80,7 @@ ansible-playbook -i hosts playbooks/postgresql/install.yaml
 
 2. create test database using `postgresql/database.yaml` playbook
 ```
-mv playbooks/postgresql/vars.example.yaml playbooks/postgresql/vars.yaml
+cp playbooks/postgresql/vars.example.yaml playbooks/postgresql/vars.yaml
 ansible-playbook -i hosts playbooks/postgresql/database.yaml
 ```
 

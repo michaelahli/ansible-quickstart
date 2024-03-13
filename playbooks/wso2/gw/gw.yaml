@@ -51,12 +51,16 @@
         remote_src: yes
       become: yes
 
-    - name: Replace deployment.toml with gateway-worker.toml
+    - name: Render deployment.toml template
       ansible.builtin.copy:
-        src: "/opt/wso2/wso2am-4.2.0/repository/resources/conf/deployment-templates/gateway-worker.toml"
+        src: "{{ deployment_conf_path }}"
         dest: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
-        mode: '0644'
-        remote_src: yes
+      become: yes
+
+    - name: Copy postgresql jar
+      ansible.builtin.copy:
+        src: "{{ postgresql_jar_path }}"
+        dest: "/opt/wso2/wso2am-4.2.0/repository/components/lib/postgresql-42.7.2.jar"
       become: yes
 
     - name: Replace localhost with IP address in deployment.toml
@@ -66,18 +70,18 @@
         replace: "{{ ip_address }}"
       become: yes
 
+    - name: Replace remotehost with target host's IP address in deployment.toml
+      replace:
+        path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
+        regexp: 'remotehost'
+        replace: "{{ cp_address }}"
+      become: yes
+
     - name: Uncomment hostname in deployment.toml
       replace:
         path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
         regexp: '#hostname'
         replace: "hostname"
-      become: yes
-
-    - name: Replace gw.wso2.com with IP address in deployment.toml
-      replace:
-        path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
-        regexp: 'gw.wso2.com'
-        replace: "{{ ip_address }}"
       become: yes
 
     - name: Create systemd service file for WSO2 Gateway Worker
