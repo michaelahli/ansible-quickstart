@@ -1,0 +1,13 @@
+- name: Set up WSO2 API Manager environment
+  hosts: all
+  tasks:
+    - name: Reload systemd 
+      systemd:
+        daemon_reload: yes
+      become: yes
+    - name: Start and enable WSO2 API Manager service
+      systemd:
+        name: wso2am
+        state: started
+        enabled: yes
+      become: yes

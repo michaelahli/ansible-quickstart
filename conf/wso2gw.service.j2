@@ -1,0 +1,13 @@
+[Unit]
+Description=WSO2 API Manager
+After=network.target
+
+[Service]
+Environment=JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 
+ExecStart=/usr/bin/bash /opt/wso2/wso2am-4.2.0/bin/api-manager.sh --optimize -Dprofile=gateway-worker --skipConfigOptimization
+ExecStop=/usr/bin/bash /opt/wso2/wso2am-4.2.0/bin/api-manager.sh -Dprofile=gateway-worker stop
+ExecReload=/usr/bin/bash /opt/wso2/wso2am-4.2.0/bin/api-manager.sh -Dprofile=gateway-worker restart
+PIDFile=/opt/wso2/wso2am-4.2.0/wso2carbon.pid
+
+[Install]
+WantedBy=default.target

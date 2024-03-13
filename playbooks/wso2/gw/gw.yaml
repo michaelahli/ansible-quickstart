@@ -1,7 +1,10 @@
-- name: Set up WSO2 API Manager environment
+- name: Set up WSO2 Gateway Worker environment
   hosts: all
-  vars_files:
-    - vars.yaml 
+  vars:
+    binary_path: "../../../bin/zip/wso2am-4.2.0.zip"
+    conf_path: "../../../conf/wso2gw.service.j2"
+    ip_address: 192.168.1.10
+
   tasks:
     - name: Install required packages
       apt:
@@ -50,15 +53,49 @@
         remote_src: yes
       become: yes
 
-    - name: Replace localhost with target host's IP address in deployment.toml
+    - name: Replace deployment.toml with gateway-worker.toml
+      ansible.builtin.copy:
+        src: "/opt/wso2/wso2am-4.2.0/repository/resources/conf/deployment-templates/gateway-worker.toml"
+        dest: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
+        mode: '0644'
+        remote_src: yes
+      become: yes
+
+    - name: Replace localhost with IP address in deployment.toml
       replace:
         path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
         regexp: 'localhost'
         replace: "{{ ip_address }}"
       become: yes
 
-    - name: Create systemd service file for WSO2 API Manager
+    - name: Uncomment hostname in deployment.toml
+      replace:
+        path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
+        regexp: '#hostname'
+        replace: "hostname"
+      become: yes
+
+    - name: Replace gw.wso2.com with IP address in deployment.toml
+      replace:
+        path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
+        regexp: 'gw.wso2.com'
+        replace: "{{ ip_address }}"
+      become: yes
+
+    - name: Create systemd service file for WSO2 Gateway Worker
       template:
         src: "{{ conf_path }}"
-        dest: /etc/systemd/system/wso2am.service
+        dest: /etc/systemd/system/wso2gw.service
+      become: yes
+
+    - name: Reload systemd after creating service file
+      systemd:
+        daemon_reload: yes
+      become: yes
+
+    - name: Start and enable WSO2 Gateway Worker service
+      systemd:
+        name: wso2gw
+        state: started
+        enabled: yes
       become: yes

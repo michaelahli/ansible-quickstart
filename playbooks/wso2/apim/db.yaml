@@ -1,0 +1,112 @@
+- name: setup apim databases
+  hosts: all 
+  vars_files:
+    - vars.yaml 
+  tasks:
+    - name: Install required dependencies
+      apt:
+        name: "{{ item }}"
+        update_cache: true
+        state: latest
+      loop:
+        - bash
+        - sudo 
+        - ssh
+        - libssl-dev
+        - libssl-doc
+        - acl
+      become: true
+    - name: Install PostgreSQL and related packages
+      apt:
+        name: "{{ item }}"
+        update_cache: true
+        state: latest
+      loop:
+        - postgresql
+        - postgresql-contrib
+        - libpq-dev
+        - python3-psycopg2
+      become: true
+    - name: Ensure PostgreSQL service is started and enabled
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+      become: true
+
+    - name: create apim_db database
+      become: true
+      become_user: postgres
+      postgresql_db: name={{ apim_db_name }} template='template0' state=present
+    - name: create user for apim_db
+      become: true
+      become_user: postgres
+      postgresql_user: db={{ apim_db_name }} name={{ apim_db_user }} password={{ apim_db_password }} priv=ALL state=present
+    - name: remove superuser permission from apim_db user
+      become: true
+      become_user: postgres
+      postgresql_user: name={{ apim_db_user }} role_attr_flags=NOSUPERUSER,NOCREATEDB state=present
+    - name: Grant write permission to the directory
+      file:
+        path: "{{ apim_db_migration_dir }}"
+        mode: "0775"
+        state: directory
+        recurse: yes
+      become: true
+    - name: Apply migration file to apim_db
+      become: true
+      become_user: postgres
+      postgresql_db:
+        name: "{{ apim_db_name }}"
+        state: restore
+        target: "{{ apim_db_migration }}"
+
+    - name: create shared_db database
+      become: true
+      become_user: postgres
+      postgresql_db: name={{ shared_db_name }} template='template0' state=present
+    - name: create user for shared_db
+      become: true
+      become_user: postgres
+      postgresql_user: db={{ shared_db_name }} name={{ shared_db_user }} password={{ shared_db_password }} priv=ALL state=present
+    - name: remove superuser permission from shared_db user
+      become: true
+      become_user: postgres
+      postgresql_user: name={{ shared_db_user }} role_attr_flags=NOSUPERUSER,NOCREATEDB state=present
+    - name: Grant write permission to the directory
+      file:
+        path: "{{ shared_db_migration_dir }}"
+        mode: "0775"
+        state: directory
+        recurse: yes
+      become: true
+    - name: Apply migration file to shared_db
+      become: true
+      become_user: postgres
+      postgresql_db:
+        name: "{{ shared_db_name }}"
+        state: restore
+        target: "{{ shared_db_migration }}"
+
+    - name: Edit postgresql.conf to allow connections from outside
+      become: true
+      lineinfile:
+        path: /etc/postgresql/{{ postgres_version }}/main/postgresql.conf
+        regexp: '^#?listen_addresses'
+        line: "listen_addresses = '*'"
+      notify: Restart PostgreSQL
+    - name: Edit pg_hba.conf to allow connections from outside
+      become: true
+      blockinfile:
+        path: /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf
+        block: |
+          # Allow connections from any IP address
+          host    all             all             0.0.0.0/0                       md5
+      notify: Restart PostgreSQL
+
+  handlers:
+    - name: Restart PostgreSQL
+      become: true
+      service:
+        name: postgresql
+        state: restarted
