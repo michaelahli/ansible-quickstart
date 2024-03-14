@@ -1,5 +1,5 @@
 [server]
-#hostname = "localhost"
+hostname = "localhost"
 server_role = "gateway-worker"
 
 [user_store]
@@ -48,7 +48,7 @@ signing_algorithm = "SHA256withRSA"
 #claims_extractor_impl = "org.wso2.carbon.apimgt.impl.token.DefaultClaimsRetriever"
 
 [apim.sync_runtime_artifacts.gateway]
-gateway_labels = ["Default"]
+gateway_labels = ["External Gateway"]
 
 # Traffic Manager configurations
 [apim.throttling]
@@ -68,7 +68,7 @@ traffic_manager_auth_urls = ["ssl://remotehost:9711"]
 
 [apim.analytics]
 enable = false
-config_endpoint = "https://localhost:8080/auth/v1"
+config_endpoint = "https://remotehost:8080/auth/v1"
 auth_token = ""
 
 # Caches
@@ -99,3 +99,11 @@ allow_headers = [
     "Internal-Key",
 ]
 allow_credentials = false
+
+[transport.http]
+properties.port = 9763
+properties.proxyPort = 80
+
+[transport.https]
+properties.port = 9443
+properties.proxyPort = 443

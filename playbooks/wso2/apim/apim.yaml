@@ -69,6 +69,13 @@
         replace: "{{ ip_address }}"
       become: yes
 
+    - name: Replace gwhost with target host's IP address in deployment.toml
+      replace:
+        path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
+        regexp: 'gwhost'
+        replace: "{{ gw_address }}"
+      become: yes
+
     - name: Create systemd service file for WSO2 API Manager
       template:
         src: "{{ conf_path }}"

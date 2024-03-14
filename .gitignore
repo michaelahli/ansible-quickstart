@@ -1,6 +1,8 @@
 hosts
 
 *.zip
+*.sh
+
 .vscode
 .DS_Store
 

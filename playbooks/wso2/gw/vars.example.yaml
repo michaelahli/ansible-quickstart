@@ -4,3 +4,4 @@ postgresql_jar_path: "../../../bin/jar/postgresql-42.7.2.jar"
 deployment_conf_path: "../../../conf/deployment.gw.toml"
 ip_address: 192.168.1.10
 cp_address: 192.168.1.10
+tm_address: 192.168.1.10

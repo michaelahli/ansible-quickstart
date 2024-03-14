@@ -77,13 +77,6 @@
         replace: "{{ cp_address }}"
       become: yes
 
-    - name: Uncomment hostname in deployment.toml
-      replace:
-        path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
-        regexp: '#hostname'
-        replace: "hostname"
-      become: yes
-
     - name: Create systemd service file for WSO2 Traffic Manager
       template:
         src: "{{ conf_path }}"

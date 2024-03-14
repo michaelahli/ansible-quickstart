@@ -77,11 +77,11 @@
         replace: "{{ cp_address }}"
       become: yes
 
-    - name: Uncomment hostname in deployment.toml
+    - name: Replace tmhost with traffic manager host's IP address in deployment.toml
       replace:
         path: "/opt/wso2/wso2am-4.2.0/repository/conf/deployment.toml"
-        regexp: '#hostname'
-        replace: "hostname"
+        regexp: 'tmhost'
+        replace: "{{ tm_address }}"
       become: yes
 
     - name: Create systemd service file for WSO2 Gateway Worker

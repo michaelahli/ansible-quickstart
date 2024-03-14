@@ -54,6 +54,23 @@ key_password = "wso2carbon"
 #key_password =  "wso2carbon"
 
 [[apim.gateway.environment]]
+name = "External Gateway"
+type = "hybrid"
+provider = "wso2"
+display_in_api_console = true
+description = "This is a hybrid gateway that handles both production and sandbox token traffic from external."
+show_as_token_endpoint_url = true
+service_url = "https://gwhost:${mgt.transport.https.port}/services/"
+username = "${admin.username}"
+password = "${admin.password}"
+ws_endpoint = "ws://gwhost:9099"
+wss_endpoint = "wss://gwhost:8099"
+http_endpoint = "http://gwhost:${http.nio.port}"
+https_endpoint = "https://gwhost:${https.nio.port}"
+websub_event_receiver_http_endpoint = "http://gwhost:9021"
+websub_event_receiver_https_endpoint = "https://gwhost:8021"
+
+[[apim.gateway.environment]]
 name = "Default"
 type = "hybrid"
 provider = "wso2"
@@ -71,7 +88,7 @@ websub_event_receiver_http_endpoint = "http://localhost:9021"
 websub_event_receiver_https_endpoint = "https://localhost:8021"
 
 [apim.sync_runtime_artifacts.gateway]
-gateway_labels = ["Default"]
+gateway_labels = ["Default", "External Gateway"]
 
 #[apim.cache.gateway_token]
 #enable = true
