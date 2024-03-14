@@ -1,6 +1,6 @@
 binary_path: "../../../bin/zip/wso2am-4.2.0.zip"
-conf_path: "../../../conf/wso2gw.service.j2"
+conf_path: "../../../conf/wso2tm.service.j2"
 postgresql_jar_path: "../../../bin/jar/postgresql-42.7.2.jar"
-deployment_conf_path: "../../../conf/deployment.gw.toml"
+deployment_conf_path: "../../../conf/deployment.tm.toml"
 ip_address: 192.168.1.10
 cp_address: 192.168.1.10

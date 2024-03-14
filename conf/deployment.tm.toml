@@ -1,0 +1,48 @@
+[server]
+hostname = "localhost"
+server_role = "traffic-manager"
+
+[user_store]
+type = "database_unique_id"
+
+[super_admin]
+username = "admin"
+password = "admin"
+create_admin_account = true
+
+[database.shared_db]
+type = "postgre"
+url = "jdbc:postgresql://remotehost:5432/shared_db"
+username = "shared_db_user"
+password = "supersecret"
+driver = "org.postgresql.Driver"
+validationQuery = "SELECT 1"
+
+[database.apim_db]
+type = "postgre"
+url = "jdbc:postgresql://remotehost:5432/apim_db"
+username = "apim_db_user"
+password = "supersecret"
+driver = "org.postgresql.Driver"
+validationQuery = "SELECT 1"
+
+[keystore.tls]
+file_name = "wso2carbon.jks"
+type = "JKS"
+password = "wso2carbon"
+alias = "wso2carbon"
+key_password = "wso2carbon"
+
+[truststore]
+file_name = "client-truststore.jks"
+type = "JKS"
+password = "wso2carbon"
+
+# key manager implementation
+[apim.key_manager]
+service_url = "https://remotehost:9443/services/"
+
+[apim.oauth_config]
+revoke_endpoint = "https://remotehost:9443/oauth2/revoke"
+enable_token_encryption = false
+enable_token_hashing = false

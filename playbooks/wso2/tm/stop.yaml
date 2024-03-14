@@ -1,0 +1,9 @@
+- name: Set up WSO2 Traffic Manager environment
+  hosts: all
+  tasks:
+    - name: Stop and disable WSO2 Traffic Manager service
+      systemd:
+        name: wso2tm
+        state: stopped
+        enabled: yes
+      become: yes
