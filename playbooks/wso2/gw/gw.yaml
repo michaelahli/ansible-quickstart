@@ -44,6 +44,13 @@
       when: wso2_file_stat.stat.exists == false
       become: yes
 
+    - name: Delete Currently Extracted WSO2 Directory
+      file:
+        path: /opt/wso2/wso2am-4.2.0
+        state: absent
+      register: out
+      become: yes
+
     - name: Extract WSO2 zip file
       ansible.builtin.unarchive:
         src: "/opt/wso2/wso2am-4.2.0.zip"
