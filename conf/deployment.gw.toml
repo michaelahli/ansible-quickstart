@@ -36,6 +36,13 @@ service_url = "https://remotehost:9443/services/"
 username = "$ref{super_admin.username}"
 password = "$ref{super_admin.password}"
 
+[apim.event_hub]
+enable = true
+username = "$ref{super_admin.username}"
+password = "$ref{super_admin.password}"
+service_url = "https://remotehost:9443/services/"
+event_listening_endpoints = ["tcp://remotehost:5672", "tcp://remotehost:5672"]
+
 # JWT Generation
 [apim.jwt]
 enable = true

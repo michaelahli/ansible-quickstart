@@ -41,6 +41,8 @@ password = "wso2carbon"
 # key manager implementation
 [apim.key_manager]
 service_url = "https://remotehost:9443/services/"
+username = "$ref{super_admin.username}"
+password = "$ref{super_admin.password}"
 
 [apim.oauth_config]
 revoke_endpoint = "https://remotehost:9443/oauth2/revoke"
