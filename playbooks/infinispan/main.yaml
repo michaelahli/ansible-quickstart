@@ -1,0 +1,76 @@
+---
+- name: Install Java 17 JDK, Maven, and unzip
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install OpenJDK 17
+      apt:
+        name: openjdk-17-jdk
+        state: present
+
+    - name: Install Maven
+      apt:
+        name: maven
+        state: present
+
+    - name: Install unzip package
+      apt:
+        name: unzip
+        state: present
+
+- name: Download and Extract Infinispan Server
+  hosts: all
+  become: yes
+  tasks:
+    - name: Download Infinispan Server
+      get_url:
+        url: https://downloads.jboss.org/infinispan/15.0.2.Final/infinispan-server-15.0.2.Final.zip
+        dest: /tmp/infinispan-server.zip
+
+    - name: Extract Infinispan Server
+      command: unzip /tmp/infinispan-server.zip -d /opt/
+      args:
+        creates: /opt/infinispan-server-15.0.2.Final
+
+    - name: Rename Infinispan directory
+      command: mv /opt/infinispan-server-15.0.2.Final /opt/infinispan
+      args:
+        creates: /opt/infinispan
+
+- name: Create Infinispan Admin User
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create admin user
+      command: sh /opt/infinispan/bin/cli.sh user create admin -p secret
+      args:
+        chdir: /opt/infinispan/bin/
+        creates: /opt/infinispan/bin/user-administration.properties
+
+- name: Create Infinispan systemd service
+  hosts: all
+  become: yes  
+  vars_files:
+    - vars.yaml 
+  tasks:
+    - name: Copy Infinispan systemd service file
+      copy:
+        src: "{{ conf_path }}"
+        dest: /etc/systemd/system/infinispan.service
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Reload systemd to detect new service
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable and start Infinispan service
+      systemd:
+        name: infinispan
+        enabled: yes
+        state: started

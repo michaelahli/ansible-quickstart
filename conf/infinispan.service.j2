@@ -1,0 +1,14 @@
+[Unit]
+Description=Infinispan Server
+After=network.target
+
+[Service]
+User=root
+Group=root
+ExecStart=/opt/infinispan/bin/server.sh -b 0.0.0.0
+WorkingDirectory=/opt/infinispan/bin/
+Type=simple
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
