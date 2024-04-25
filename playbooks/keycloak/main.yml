@@ -1,0 +1,92 @@
+---
+- name: Install Keycloak on Ubuntu
+  hosts: all
+  become: yes
+  vars_files:
+    - vars.yaml 
+  tasks:
+    - name: Install required system packages
+      apt:
+        pkg:
+          - unzip
+          - openjdk-17-jdk
+          - openssl
+        state: latest
+        update_cache: true
+
+    - name: Download Keycloak zip file
+      get_url:
+        url: "https://github.com/keycloak/keycloak/releases/download/24.0.3/keycloak-24.0.3.zip"
+        dest: "/tmp/keycloak-24.0.3.zip"
+
+    - name: Unzip Keycloak archive
+      unarchive:
+        src: "/tmp/keycloak-24.0.3.zip"
+        dest: "/opt/"
+        remote_src: yes
+
+    - name: Rename Keycloak directory
+      command: mv /opt/keycloak-24.0.3 /opt/keycloak
+      args:
+        creates: /opt/keycloak
+
+    - name: Set JAVA_HOME environment variable
+      lineinfile:
+        dest: /etc/environment
+        line: 'JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"'
+        regexp: '^JAVA_HOME='
+        state: present
+
+    - name: Create systemd service file for Keycloak
+      template:
+        src: "{{ conf_path }}"
+        dest: /etc/systemd/system/keycloak.service
+
+    - name: Generate an OpenSSL private key
+      community.crypto.openssl_privatekey:
+        path: "/opt/keycloak/conf/server.key.pem"
+        size: "{{ key_size }}"
+        type: "{{ key_type }}"
+        backup: yes
+
+    - name: Generate an OpenSSL Certificate Signing Request with Subject information
+      community.crypto.openssl_csr:
+        path: "/opt/keycloak/conf/server.csr.pem"
+        privatekey_path: "/opt/keycloak/conf/server.key.pem"
+        country_name: "{{ country_name }}"
+        organization_name: "{{ organization_name }}"
+        email_address: "{{ email_address }}"
+        common_name: "{{ server_hostname }}"
+
+    - name: Generate a Self Signed OpenSSL certificate
+      community.crypto.x509_certificate:
+        path: "/opt/keycloak/conf/server.crt.pem"
+        privatekey_path: "/opt/keycloak/conf/server.key.pem"
+        csr_path: "/opt/keycloak/conf/server.csr.pem"
+        provider: selfsigned
+
+    - name: Update keycloak.conf file with certificate and key paths
+      lineinfile:
+        path: "/opt/keycloak/conf/keycloak.conf"
+        regexp: '^#https-certificate-file='
+        line: 'https-certificate-file=/opt/keycloak/conf/server.crt.pem'
+        backrefs: yes
+        state: present
+
+    - name: Update keycloak.conf file with private key path
+      lineinfile:
+        path: "/opt/keycloak/conf/keycloak.conf"
+        regexp: '^#https-certificate-key-file='
+        line: 'https-certificate-key-file=/opt/keycloak/conf/server.key.pem'
+        backrefs: yes
+        state: present
+  
+    - name: Reload systemd daemon
+      systemd:
+        daemon_reload: yes
+
+    - name: Start and enable Keycloak service
+      service:
+        name: keycloak
+        state: started
+        enabled: yes

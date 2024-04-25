@@ -1,0 +1,14 @@
+[Unit]
+Description=Keycloak Service
+After=network.target
+
+[Service]
+User=root
+Environment="JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64"
+Environment="KEYCLOAK_ADMIN=admin"
+Environment="KEYCLOAK_ADMIN_PASSWORD=admin"
+ExecStart=/opt/keycloak/bin/kc.sh start-dev
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

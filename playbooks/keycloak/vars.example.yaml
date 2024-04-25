@@ -1,0 +1,8 @@
+conf_path: "../../conf/keycloak.service.j2"
+server_hostname: mike.com
+key_size: 4096
+passphrase: mike # Set if you want passphrase
+key_type: RSA # Others include DSA, ECC, Ed25519, Ed448, X25519, X448
+country_name: KE
+email_address: michael@yopmail.com
+organization_name: mike
