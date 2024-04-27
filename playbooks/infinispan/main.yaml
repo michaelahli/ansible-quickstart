@@ -25,6 +25,8 @@
 - name: Download and Extract Infinispan Server
   hosts: all
   become: yes
+  vars_files:
+    - vars.yaml 
   tasks:
     - name: Download Infinispan Server
       get_url:
@@ -40,6 +42,15 @@
       command: mv /opt/infinispan-server-15.0.2.Final /opt/infinispan
       args:
         creates: /opt/infinispan
+
+    - name: Copy local infinispan.xml to remote server
+      copy:
+        src: "{{ infinispan_conf_path }}"
+        dest: "/opt/infinispan/server/conf/infinispan.xml"
+        owner: root
+        group: root
+        mode: "0644"
+        backup: yes
 
 - name: Create Infinispan Admin User
   hosts: all

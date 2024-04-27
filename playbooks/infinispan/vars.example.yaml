@@ -1,1 +1,2 @@
 conf_path: "../../conf/infinispan.service.j2"
+infinispan_conf_path: "../../conf/infinispan.xml"
