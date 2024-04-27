@@ -6,3 +6,7 @@ key_type: RSA # Others include DSA, ECC, Ed25519, Ed448, X25519, X448
 country_name: KE
 email_address: michael@yopmail.com
 organization_name: mike
+ispn_remote_host: 192.168.1.10
+ispn_remote_port: 11222
+ispn_remote_password: admin
+ispn_remote_username: admin

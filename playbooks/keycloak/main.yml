@@ -80,7 +80,21 @@
         line: 'https-certificate-key-file=/opt/keycloak/conf/server.key.pem'
         backrefs: yes
         state: present
-  
+
+    - name: Add cache settings to keycloak.conf
+      lineinfile:
+        path: "/opt/keycloak/conf/keycloak.conf"
+        line: "{{ item }}"
+        insertafter: EOF
+        state: present
+      loop:
+        - "cache=ispn"
+        - "cache-remote-host={{ ispn_remote_host }}"
+        - "cache-remote-port={{ ispn_remote_port }}"
+        - "cache-remote-password={{ ispn_remote_password }}"
+        - "cache-remote-username={{ ispn_remote_username }}"
+        - "cache-stack=tcp"
+
     - name: Reload systemd daemon
       systemd:
         daemon_reload: yes

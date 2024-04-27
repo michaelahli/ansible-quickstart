@@ -7,6 +7,9 @@ User=root
 Environment="JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64"
 Environment="KEYCLOAK_ADMIN=admin"
 Environment="KEYCLOAK_ADMIN_PASSWORD=admin"
+Environment="KC_HOSTNAME_STRICT=false"
+Environment="KC_HTTPS_CERTIFICATE_FILE=/opt/keycloak/conf/server.crt.pem"
+Environment="KC_HTTPS_CERTIFICATE_KEY_FILE=/opt/keycloak/conf/server.key.pem"
 ExecStart=/opt/keycloak/bin/kc.sh start-dev
 SuccessExitStatus=143
 
