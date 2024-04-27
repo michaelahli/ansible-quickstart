@@ -46,7 +46,7 @@
   become: yes
   tasks:
     - name: Create admin user
-      command: sh /opt/infinispan/bin/cli.sh user create admin -p secret
+      command: sh /opt/infinispan/bin/cli.sh user create admin -p secret -g admin
       args:
         chdir: /opt/infinispan/bin/
         creates: /opt/infinispan/bin/user-administration.properties
